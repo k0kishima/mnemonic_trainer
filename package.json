@@ -1,4 +1,10 @@
 {
   "private": true,
-  "workspaces": ["backend", "frontend"]
+  "workspaces": [
+    "backend",
+    "frontend"
+  ],
+  "dependencies": {
+    "yarn": "^1.22.18"
+  }
 }
