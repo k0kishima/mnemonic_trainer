@@ -8,7 +8,9 @@ export const ormconfig: TypeOrmModuleOptions = {
   username: process.env.DB_USERNAME ?? 'root',
   password: process.env.DB_PASSWORD ?? 'password',
   database: process.env.DB_DATABASE ?? 'mnemonic_trainer',
-  synchronize: true,
+  synchronize: false,
+  migrationsRun: false,
   entities: ['dist/entity/*.js'],
+  migrations: ['dist/migrations/*.js'],
   namingStrategy: new TypeOrmNamingStrategy(),
 };
