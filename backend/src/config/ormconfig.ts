@@ -10,7 +10,8 @@ export const ormconfig: TypeOrmModuleOptions = {
   database: process.env.DB_DATABASE ?? 'mnemonic_trainer',
   synchronize: false,
   migrationsRun: false,
-  entities: ['dist/entity/*.js'],
+  entities: ['dist/**/*.entity.js'],
   migrations: ['dist/migrations/*.js'],
   namingStrategy: new TypeOrmNamingStrategy(),
+  logging: true,
 };
