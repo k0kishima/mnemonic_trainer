@@ -1,4 +1,5 @@
 export interface WordData {
+  id: number;
   name: string;
 }
 

@@ -15,15 +15,14 @@ export class WordService {
     const qb = this.wordRepository.createQueryBuilder('words');
     const wordsCount = await qb.getCount();
 
-    if ('limit' in query) {
-      qb.limit(query.limit);
-    }
+    const limit = 'limit' in query ? query.limit : 10;
+    qb.limit(limit);
 
     if ('offset' in query) {
       qb.offset(query.offset);
     }
 
-    const words = await qb.getMany();
+    const words = await qb.select(['words.id', 'words.name']).getMany();
 
     return { words, wordsCount };
   }
