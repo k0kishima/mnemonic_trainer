@@ -23,7 +23,9 @@ export default class TypeOrmNamingStrategy extends DefaultNamingStrategy {
   }
 
   joinColumnName(relationName: string, referencedColumnName: string): string {
-    return snakeCase(relationName);
+    return snakeCase(
+      `${pluralize.singular(relationName)}_${referencedColumnName}`,
+    );
   }
 
   joinTableName(
@@ -41,7 +43,7 @@ export default class TypeOrmNamingStrategy extends DefaultNamingStrategy {
     columnName: string,
   ) {
     return snakeCase(
-      `${pluralize.singular(tableName)}_${columnName ?? propertyName})`,
+      `${pluralize.singular(tableName)}_${columnName ?? propertyName}`,
     );
   }
 
