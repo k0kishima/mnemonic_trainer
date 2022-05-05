@@ -22,7 +22,7 @@ export class WordController {
   })
   @Get()
   async findAll(@Query() query): Promise<GetWordsResponse> {
-    return await this.wordService.find(query);
+    return await this.wordService.findAll(query);
   }
 
   @ApiOperation({ summary: 'Create a word' })

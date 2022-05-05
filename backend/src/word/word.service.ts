@@ -13,7 +13,7 @@ export class WordService {
     private readonly wordRepository: Repository<WordEntity>,
   ) {}
 
-  async find(query): Promise<WordsRO> {
+  async findAll(query): Promise<WordsRO> {
     const qb = this.wordRepository.createQueryBuilder('words');
     const wordsCount = await qb.getCount();
 
