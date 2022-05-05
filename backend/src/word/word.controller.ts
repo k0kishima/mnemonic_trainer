@@ -1,6 +1,11 @@
-import { Controller, Get, HttpStatus, Query } from '@nestjs/common';
+import { Body, Controller, Get, HttpStatus, Post, Query } from '@nestjs/common';
 import { ApiResponse, ApiOperation, ApiQuery, ApiTags } from '@nestjs/swagger';
-import { GetWordsResponse, GetWordsRequest } from './word.dto';
+import {
+  CreateWordResponse,
+  CreateWordRequest,
+  GetWordsResponse,
+  GetWordsRequest,
+} from './word.dto';
 import { WordService } from './word.service';
 
 @ApiTags('words')
@@ -18,5 +23,21 @@ export class WordController {
   @Get()
   async findAll(@Query() query): Promise<GetWordsResponse> {
     return await this.wordService.find(query);
+  }
+
+  @ApiOperation({ summary: 'Create a word' })
+  @ApiResponse({
+    status: HttpStatus.CREATED,
+    description: 'The word has been successfully created.',
+  })
+  @ApiResponse({
+    status: HttpStatus.BAD_REQUEST,
+    description: 'The word have already registered.',
+  })
+  @Post()
+  async create(
+    @Body() wordData: CreateWordRequest,
+  ): Promise<CreateWordResponse> {
+    return this.wordService.create(wordData);
   }
 }
