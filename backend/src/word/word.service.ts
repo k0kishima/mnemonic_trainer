@@ -1,7 +1,8 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
-import { Repository } from 'typeorm';
+import { Repository, In } from 'typeorm';
+import { rand } from '$backend/shared/utils';
 import {
   CreateWordRequest,
   CreateWordResponse,
@@ -15,22 +16,6 @@ export class WordService {
     @InjectRepository(Word)
     private readonly wordRepository: Repository<Word>,
   ) {}
-
-  async findAll(query): Promise<GetWordsResponse> {
-    const qb = this.wordRepository.createQueryBuilder('words');
-    const wordsCount = await qb.getCount();
-
-    const limit = 'limit' in query ? query.limit : 10;
-    qb.limit(limit);
-
-    if ('offset' in query) {
-      qb.offset(query.offset);
-    }
-
-    const words = await qb.select(['words.id', 'words.name']).getMany();
-
-    return { words, wordsCount };
-  }
 
   // NOTE: 設計に関して思うこと
   // このクラスがHTTPの異常系に対応する例外と結合する是非は？
@@ -62,5 +47,29 @@ export class WordService {
         HttpStatus.BAD_REQUEST,
       );
     }
+  }
+
+  async findAll(query): Promise<GetWordsResponse> {
+    const qb = this.wordRepository.createQueryBuilder('words');
+    const wordsCount = await qb.getCount();
+
+    const limit = 'limit' in query ? query.limit : 10;
+    qb.limit(limit);
+
+    if ('offset' in query) {
+      qb.offset(query.offset);
+    }
+
+    const words = await qb.select(['words.id', 'words.name']).getMany();
+
+    return { words, wordsCount };
+  }
+
+  async findRandomly(limit = 10): Promise<Word[]> {
+    const quantityOfWords = await this.wordRepository.count();
+    // FIXME: ID重複したら指定した数に不足してしまう
+    // 単語数自体が多かったら滅多に発生しないので今のところ放置してるが明かなバグなので要修正
+    const ids = [...Array(limit)].map(() => rand(1, quantityOfWords));
+    return await this.wordRepository.find({ where: { id: In(ids) } });
   }
 }
