@@ -2,18 +2,21 @@ import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { validate } from 'class-validator';
 import { Repository } from 'typeorm';
-import { CreateWordRequest } from './word.dto';
-import { Word as WordEntity } from './word.entity';
-import { WordsRO, WordRO } from './word.interface';
+import {
+  CreateWordRequest,
+  CreateWordResponse,
+  GetWordsResponse,
+} from './word.dto';
+import { Word } from './word.entity';
 
 @Injectable()
 export class WordService {
   constructor(
-    @InjectRepository(WordEntity)
-    private readonly wordRepository: Repository<WordEntity>,
+    @InjectRepository(Word)
+    private readonly wordRepository: Repository<Word>,
   ) {}
 
-  async findAll(query): Promise<WordsRO> {
+  async findAll(query): Promise<GetWordsResponse> {
     const qb = this.wordRepository.createQueryBuilder('words');
     const wordsCount = await qb.getCount();
 
@@ -33,12 +36,12 @@ export class WordService {
   // このクラスがHTTPの異常系に対応する例外と結合する是非は？
   // サービスクラスだからこのケースのエラーだとこのステータスコードを返すとか、
   // そういうビジネスロジックは知ってていい気はしてるので一旦この実装としている
-  async create(dto: CreateWordRequest): Promise<WordRO> {
+  async create(dto: CreateWordRequest): Promise<CreateWordResponse> {
     const {
       word: { name },
     } = dto;
 
-    const newWord = new WordEntity();
+    const newWord = new Word();
     newWord.name = name;
 
     try {
@@ -47,7 +50,7 @@ export class WordService {
         throw new Error('The word input is not valid.');
       }
       const savedWord = await this.wordRepository.save(newWord);
-      return this.buildWordRO(savedWord);
+      return { word: savedWord };
     } catch (e) {
       throw new HttpException(
         // TODO: DB設計レベルの詳細度でエラーメッセージを出さない
@@ -59,14 +62,5 @@ export class WordService {
         HttpStatus.BAD_REQUEST,
       );
     }
-  }
-
-  private buildWordRO(word: WordEntity) {
-    const wordRO = {
-      id: word.id,
-      name: word.name,
-    };
-
-    return { word: wordRO };
   }
 }

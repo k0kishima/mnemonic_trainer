@@ -2,7 +2,7 @@ import { Test } from '@nestjs/testing';
 import { tearDownDatabase } from 'typeorm-seeding';
 import { WordController } from './word.controller';
 import { WordService } from './word.service';
-import { Word as WordEntity } from './word.entity';
+import { Word } from './word.entity';
 import { AppModule } from '$backend/app.module';
 
 describe('WordController', () => {
@@ -14,7 +14,7 @@ describe('WordController', () => {
     // AppModule からではなく、以下のように必要最低限の要素をベースにテスト用モジュールを作りたい
     /*
     const module = await Test.createTestingModule({
-      imports: [ TypeOrmModule.forRoot(), TypeOrmModule.forFeature([WordEntity]), ],
+      imports: [ TypeOrmModule.forRoot(), TypeOrmModule.forFeature([Word]), ],
       controllers: [WordController],
       providers: [WordService],
     }).compile();
@@ -35,9 +35,9 @@ describe('WordController', () => {
 
   describe('findAll', () => {
     it('単語の配列を返す', async () => {
-      const words: WordEntity[] = [];
+      const words: Word[] = [];
       const createWord = (id, name) => {
-        const word = new WordEntity();
+        const word = new Word();
         word.id = id;
         word.name = name;
         return word;
