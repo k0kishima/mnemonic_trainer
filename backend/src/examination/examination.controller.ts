@@ -1,4 +1,5 @@
 import {
+  Body,
   Controller,
   Get,
   HttpStatus,
@@ -13,6 +14,7 @@ import {
   GetExaminationResponse,
   GetExaminationsResponse,
   UpdateExaminationResponse,
+  AnswerRequest,
 } from './examination.dto';
 import { ExaminationService } from './examination.service';
 
@@ -60,5 +62,19 @@ export class ExaminationController {
   @Patch(':id/remember')
   async remember(@Param('id') id): Promise<UpdateExaminationResponse> {
     return await this.examinationService.makeRemembered(id);
+  }
+
+  @ApiOperation({ summary: 'Answer to the examination.' })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The answer has been successfully posted.',
+  })
+  @ApiParam({ name: 'id' })
+  @Post(':id/answer')
+  async answer(
+    @Body() answersData: AnswerRequest,
+    @Param('id') id,
+  ): Promise<UpdateExaminationResponse> {
+    return await this.examinationService.answer(id, answersData);
   }
 }

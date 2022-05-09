@@ -23,3 +23,8 @@ export class UpdateExaminationResponse {
   @ApiProperty()
   readonly examination: Examination;
 }
+
+export class AnswerRequest {
+  @ApiProperty()
+  readonly values: string[];
+}
