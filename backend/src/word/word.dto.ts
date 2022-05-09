@@ -1,5 +1,5 @@
 import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
-import { WordData, WordsRO, WordRO } from './word.interface';
+import { Word } from './word.entity';
 
 export class GetWordsRequest {
   @ApiPropertyOptional()
@@ -9,9 +9,9 @@ export class GetWordsRequest {
   offset: number;
 }
 
-export class GetWordsResponse implements WordsRO {
+export class GetWordsResponse {
   @ApiProperty()
-  words: WordData[];
+  words: Word[];
 
   @ApiProperty()
   wordsCount: number;
@@ -24,7 +24,7 @@ export class CreateWordRequest {
   };
 }
 
-export class CreateWordResponse implements WordRO {
+export class CreateWordResponse {
   @ApiProperty()
-  word: WordData;
+  word: Word;
 }

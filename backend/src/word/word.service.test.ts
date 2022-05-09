@@ -1,6 +1,7 @@
 import { Test } from '@nestjs/testing';
 import { HttpException } from '@nestjs/common';
-import { tearDownDatabase } from 'typeorm-seeding';
+import { tearDownDatabase, runSeeder } from 'typeorm-seeding';
+import CreateWordSeed from '$backend/database/seeds/create-words.seed';
 import { AppModule } from '$backend/app.module';
 import { WordService } from './word.service';
 
@@ -46,6 +47,16 @@ describe('WordService', () => {
           service.create({ word: { name: null } }),
         ).rejects.toThrowError(HttpException);
       });
+    });
+  });
+
+  describe('findRandomly', () => {
+    it('指定された個数以上の単語が登録されている場合、指定された個数の単語を無作為に選んで返す', async () => {
+      await runSeeder(CreateWordSeed);
+      const limit = 2;
+      const words = await service.findRandomly(limit);
+      expect(words).toBeInstanceOf(Array);
+      expect(words.length).toStrictEqual(limit);
     });
   });
 });

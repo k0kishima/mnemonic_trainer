@@ -20,5 +20,5 @@ export const ormconfig: TypeOrmModuleOptions = {
       : ['dist/**/*.entity.js'],
   migrations: ['dist/migrations/*.js'],
   namingStrategy: new TypeOrmNamingStrategy(),
-  logging: process.env.NODE_ENV === 'production' ? false : true,
+  logging: process.env.NODE_ENV === 'development' ? true : false,
 };
