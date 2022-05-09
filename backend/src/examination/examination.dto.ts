@@ -6,6 +6,11 @@ export class CreateExaminationResponse {
   readonly examination: Examination;
 }
 
+export class GetExaminationResponse {
+  @ApiProperty()
+  readonly examination: Examination;
+}
+
 export class UpdateExaminationResponse {
   @ApiProperty()
   readonly examination: Examination;

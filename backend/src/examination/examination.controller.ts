@@ -1,7 +1,15 @@
-import { Controller, HttpStatus, Param, Patch, Post } from '@nestjs/common';
+import {
+  Controller,
+  Get,
+  HttpStatus,
+  Param,
+  Patch,
+  Post,
+} from '@nestjs/common';
 import { ApiResponse, ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
 import {
   CreateExaminationResponse,
+  GetExaminationResponse,
   UpdateExaminationResponse,
 } from './examination.dto';
 import { ExaminationService } from './examination.service';
@@ -22,6 +30,19 @@ export class ExaminationController {
   }
 
   // TODO: こういうパスからパラメータパースするタイプのURLでSwaggerのTry it どう使うのかわからないので調べる
+  @ApiOperation({
+    summary: 'Find an examination by id specified at a parameter.',
+  })
+  @ApiResponse({
+    status: HttpStatus.OK,
+    description: 'The examination found.',
+  })
+  @ApiQuery({ name: 'id' })
+  @Get(':id')
+  async findOne(@Param('id') id): Promise<GetExaminationResponse> {
+    return await this.examinationService.findOne(id);
+  }
+
   @ApiOperation({ summary: 'Make an examination remembered.' })
   @ApiResponse({
     status: HttpStatus.OK,

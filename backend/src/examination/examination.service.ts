@@ -4,6 +4,7 @@ import { Repository } from 'typeorm';
 import { Examination } from './examination.entity';
 import {
   CreateExaminationResponse,
+  GetExaminationResponse,
   UpdateExaminationResponse,
 } from './examination.dto';
 import { WordService } from '$backend/word/word.service';
@@ -24,6 +25,22 @@ export class ExaminationService {
     const savedEntity = await this.repository.save(newEntity);
 
     return { examination: savedEntity };
+  }
+
+  async findOne(id): Promise<GetExaminationResponse> {
+    const persistedEntity = await this.repository.findOne({
+      where: { id: id },
+      relations: ['words', 'answers'],
+    });
+
+    if (!persistedEntity) {
+      throw new HttpException(
+        { message: 'an examination which specified by id not found' },
+        HttpStatus.BAD_REQUEST,
+      );
+    }
+
+    return { examination: persistedEntity };
   }
 
   async makeRemembered(id: number): Promise<UpdateExaminationResponse> {
