@@ -5,11 +5,13 @@ import {
   Param,
   Patch,
   Post,
+  Query,
 } from '@nestjs/common';
-import { ApiResponse, ApiOperation, ApiTags, ApiQuery } from '@nestjs/swagger';
+import { ApiResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CreateExaminationResponse,
   GetExaminationResponse,
+  GetExaminationsResponse,
   UpdateExaminationResponse,
 } from './examination.dto';
 import { ExaminationService } from './examination.service';
@@ -29,7 +31,6 @@ export class ExaminationController {
     return this.examinationService.create();
   }
 
-  // TODO: こういうパスからパラメータパースするタイプのURLでSwaggerのTry it どう使うのかわからないので調べる
   @ApiOperation({
     summary: 'Find an examination by id specified at a parameter.',
   })
@@ -37,10 +38,17 @@ export class ExaminationController {
     status: HttpStatus.OK,
     description: 'The examination found.',
   })
-  @ApiQuery({ name: 'id' })
+  @ApiParam({ name: 'id' })
   @Get(':id')
   async findOne(@Param('id') id): Promise<GetExaminationResponse> {
     return await this.examinationService.findOne(id);
+  }
+
+  @Get()
+  async findAll(
+    @Query() query: { cursor: number },
+  ): Promise<GetExaminationsResponse> {
+    return await this.examinationService.findAll(query.cursor ?? 0);
   }
 
   @ApiOperation({ summary: 'Make an examination remembered.' })
@@ -48,7 +56,7 @@ export class ExaminationController {
     status: HttpStatus.OK,
     description: 'The examination has been successfully updated.',
   })
-  @ApiQuery({ name: 'id' })
+  @ApiParam({ name: 'id' })
   @Patch(':id/remember')
   async remember(@Param('id') id): Promise<UpdateExaminationResponse> {
     return await this.examinationService.makeRemembered(id);

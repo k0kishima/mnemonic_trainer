@@ -1,10 +1,11 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { MoreThan, Repository } from 'typeorm';
 import { Examination } from './examination.entity';
 import {
   CreateExaminationResponse,
   GetExaminationResponse,
+  GetExaminationsResponse,
   UpdateExaminationResponse,
 } from './examination.dto';
 import { WordService } from '$backend/word/word.service';
@@ -41,6 +42,20 @@ export class ExaminationService {
     }
 
     return { examination: persistedEntity };
+  }
+
+  async findAll(cursorById, limit = 10): Promise<GetExaminationsResponse> {
+    const qb = this.repository.createQueryBuilder('examanitions');
+    const examinationsCount = await qb.getCount();
+
+    qb.limit(limit);
+    qb.offset(cursorById);
+    const examinations = await qb
+      .where({ id: MoreThan(cursorById) })
+      .orderBy({ id: 'ASC' })
+      .getMany();
+
+    return { examinations, examinationsCount };
   }
 
   async makeRemembered(id: number): Promise<UpdateExaminationResponse> {
