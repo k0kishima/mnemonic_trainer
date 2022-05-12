@@ -1,4 +1,5 @@
-import { ExaminationRoutes } from '../features/examinations';
+import React from 'react';
+import { ExaminationRoutes } from '$frontend/features/examinations';
 
 export const publicRoutes = [
   {
