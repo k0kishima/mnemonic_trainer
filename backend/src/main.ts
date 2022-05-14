@@ -3,7 +3,8 @@ import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
 import { AppModule } from './app.module';
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  // TODO: CORS は最小限の範囲に絞る
+  const app = await NestFactory.create(AppModule, { cors: true });
 
   const config = new DocumentBuilder().setVersion('1.0').build();
   const document = SwaggerModule.createDocument(app, config);
