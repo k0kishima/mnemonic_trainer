@@ -1,24 +1,24 @@
 import React, { useEffect, useState } from 'react';
 import { Link } from 'react-router-dom';
-import { getExaminations, Examination } from '$frontend/features/examinations';
+import { useTranslation } from "react-i18next";
+import { getExaminations, Examination, ExaminationStatus } from '$frontend/features/examinations';
 
-type Props = {
-  examination: Examination;
-};
-
-const Item: React.FC<Props> = ({ examination }) => {
-  switch (true) {
-    case (!!examination.answeredAt):
-      return <li>{`${examination.answeredAt} 回答済み`}</li>
-    case (!!examination.rememberedAt):
-      return <li>{`${examination.rememberedAt} 未回答`}</li>
-    default:
-      return <li>{`${examination.createdAt} 記憶中`}</li>
-  }
-};
 
 export const Page: React.FC = () => {
+  const { t } = useTranslation();
+
   const [examinations, setExaminations] = useState<Examination[]>([]);
+
+  const getStatus = (examination: Examination): ExaminationStatus => {
+    switch (true) {
+      case (!!examination.answeredAt):
+        return 'done';
+      case (!!examination.rememberedAt):
+        return 'wait_for_answers';
+      default:
+        return 'memorizing';
+    }
+  }
 
   useEffect(() => {
     (async () => {
@@ -34,10 +34,11 @@ export const Page: React.FC = () => {
     <>
       <ul>
         {examinations.map((examination, i) => {
-          return <li><Item examination={examination} /></li>
+          const statusText = t(getStatus(examination));
+          return <li key={i}>{`${examination.createdAt} ${statusText}`}</li>
         })}
       </ul>
-      <Link to="/examination/take">テストを実施</Link>
+      <Link to="/examination/take">{t('take_examination')}</Link>
     </>
   )
 }

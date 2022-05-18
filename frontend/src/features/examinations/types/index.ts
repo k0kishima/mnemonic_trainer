@@ -12,6 +12,8 @@ export type Examination = {
   answers: Answer[];
 }
 
+export type ExaminationStatus = 'done' | 'wait_for_answers' | 'memorizing';
+
 export type Answer = {
   id: number;
   value: string;
