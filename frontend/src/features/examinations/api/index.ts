@@ -1,0 +1,1 @@
+export { getExaminations } from './getExaminations';
