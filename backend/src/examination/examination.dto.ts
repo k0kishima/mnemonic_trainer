@@ -1,4 +1,4 @@
-import { ApiProperty } from '@nestjs/swagger';
+import { ApiProperty, ApiPropertyOptional } from '@nestjs/swagger';
 import { Examination } from './examination.entity';
 
 export class CreateExaminationResponse {
@@ -9,6 +9,14 @@ export class CreateExaminationResponse {
 export class GetExaminationResponse {
   @ApiProperty()
   readonly examination: Examination;
+}
+
+export class GetExaminationsRequest {
+  @ApiPropertyOptional()
+  limit: number;
+
+  @ApiPropertyOptional()
+  offset: number;
 }
 
 export class GetExaminationsResponse {

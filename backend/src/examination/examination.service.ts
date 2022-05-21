@@ -6,6 +6,7 @@ import {
   AnswerRequest,
   CreateExaminationResponse,
   GetExaminationResponse,
+  GetExaminationsRequest,
   GetExaminationsResponse,
   UpdateExaminationResponse,
 } from './examination.dto';
@@ -51,16 +52,16 @@ export class ExaminationService {
     return { examination: persistedEntity };
   }
 
-  async findAll(cursorById, limit = 10): Promise<GetExaminationsResponse> {
+  async findAll({
+    limit = 10,
+    offset = 0,
+  }: GetExaminationsRequest): Promise<GetExaminationsResponse> {
     const qb = this.examinationRepository.createQueryBuilder('examanitions');
     const examinationsCount = await qb.getCount();
 
     qb.limit(limit);
-    qb.offset(cursorById);
-    const examinations = await qb
-      .where({ id: MoreThan(cursorById) })
-      .orderBy({ id: 'ASC' })
-      .getMany();
+    qb.offset(offset);
+    const examinations = await qb.orderBy({ id: 'ASC' }).getMany();
 
     return { examinations, examinationsCount };
   }
