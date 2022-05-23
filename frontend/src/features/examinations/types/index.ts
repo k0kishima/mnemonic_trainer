@@ -3,16 +3,17 @@ export type Word = {
   name: string;
 }
 
-export type Examination = {
-  id: number;
-  rememberedAt: Date;
-  answeredAt: Date;
-  createdAt: Date;
-  words: Word[];
-  answers: Answer[];
-}
-
 export type ExaminationStatus = 'done' | 'wait_for_answers' | 'memorizing';
+
+export type Examination = {
+  readonly id: number;
+  readonly rememberedAt: Date;
+  readonly answeredAt: Date;
+  readonly createdAt: Date;
+  readonly words: Word[];
+  readonly answers: Answer[];
+  status?: ExaminationStatus;
+}
 
 export type Answer = {
   id: number;

@@ -1,6 +1,6 @@
 import { HttpException, HttpStatus, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Connection, MoreThan, Repository } from 'typeorm';
+import { Connection, IsNull, MoreThan, Repository } from 'typeorm';
 import { Answer } from '$backend/answer/answer.entity';
 import {
   AnswerRequest,
@@ -64,10 +64,17 @@ export class ExaminationService {
     qb.limit(limit);
     qb.offset(offset);
     if (rememberedDate) {
-      qb.where({ rememberedAt: MoreThan(rememberedDate) });
+      qb.where({
+        rememberedAt: MoreThan(rememberedDate),
+        answeredAt: IsNull(),
+      });
     }
     if (answeredDate) {
       qb.where({ answeredAt: MoreThan(answeredDate) });
+    }
+    // TODO: この制御は直感的じゃないので改めたい
+    if (!rememberedDate && !answeredDate) {
+      qb.where({ rememberedAt: IsNull(), answeredAt: IsNull() });
     }
     const examinations = await qb.orderBy({ id: 'ASC' }).getMany();
 
