@@ -55,12 +55,20 @@ export class ExaminationService {
   async findAll({
     limit = 10,
     offset = 0,
+    rememberedDate = undefined,
+    answeredDate = undefined,
   }: GetExaminationsRequest): Promise<GetExaminationsResponse> {
     const qb = this.examinationRepository.createQueryBuilder('examanitions');
     const examinationsCount = await qb.getCount();
 
     qb.limit(limit);
     qb.offset(offset);
+    if (rememberedDate) {
+      qb.where({ rememberedAt: MoreThan(rememberedDate) });
+    }
+    if (answeredDate) {
+      qb.where({ answeredAt: MoreThan(answeredDate) });
+    }
     const examinations = await qb.orderBy({ id: 'ASC' }).getMany();
 
     return { examinations, examinationsCount };
