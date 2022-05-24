@@ -3,6 +3,7 @@ import { Link, useLocation } from 'react-router-dom';
 import { useTranslation } from "react-i18next";
 import { parse } from "query-string";
 import { getExaminations, Examination } from '$frontend/features/examinations';
+import { pages } from '$frontend/paths';
 
 export const Page: React.FC = () => {
   const { t } = useTranslation();
@@ -39,16 +40,16 @@ export const Page: React.FC = () => {
   return (
     <>
       <ul>
-        <li><Link to={ { pathname: '/examination/list', search: 'status=memorizing' } }>{t('memorizing')}</Link></li>
-        <li><Link to={ { pathname: '/examination/list', search: 'status=wait_for_answers' } }>{t('wait_for_answers')}</Link></li>
-        <li><Link to={ { pathname: '/examination/list', search: 'status=done' } }>{t('done')}</Link></li>
+        <li><Link to={ { pathname: pages.examination.index, search: 'status=memorizing' } }>{t('memorizing')}</Link></li>
+        <li><Link to={ { pathname: pages.examination.index, search: 'status=wait_for_answers' } }>{t('wait_for_answers')}</Link></li>
+        <li><Link to={ { pathname: pages.examination.index, search: 'status=done' } }>{t('done')}</Link></li>
       </ul>
       <ul>
         {examinations.map((examination, i) => {
           return <li key={i}>{`${examination.createdAt} ${t(examination.status)}`}</li>
         })}
       </ul>
-      <Link to="/examination/take">{t('take_examination')}</Link>
+      <Link to={pages.examination.take}>{t('take_examination')}</Link>
     </>
   )
 }
