@@ -1,0 +1,1 @@
+export const RESOURCE_SERVER_BASE_URL = process.env.REACT_APP_RESOURCE_SERVER_BASE_URL as string;

@@ -12,6 +12,7 @@ import { ApiResponse, ApiOperation, ApiParam, ApiTags } from '@nestjs/swagger';
 import {
   CreateExaminationResponse,
   GetExaminationResponse,
+  GetExaminationsRequest,
   GetExaminationsResponse,
   UpdateExaminationResponse,
   AnswerRequest,
@@ -48,9 +49,9 @@ export class ExaminationController {
 
   @Get()
   async findAll(
-    @Query() query: { cursor: number },
+    @Query() query: GetExaminationsRequest,
   ): Promise<GetExaminationsResponse> {
-    return await this.examinationService.findAll(query.cursor ?? 0);
+    return await this.examinationService.findAll(query);
   }
 
   @ApiOperation({ summary: 'Make an examination remembered.' })
